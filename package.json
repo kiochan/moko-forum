@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "A forum based on react.js",
   "scripts": {
-    "next": "next dev"
+    "next": "next dev",
+    "start": "next dev",
+    "_test": "这个start是自定义的，_test是备注"
   },
   "keywords": [
     "react",
