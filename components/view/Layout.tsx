@@ -6,7 +6,7 @@ interface LayoutProps {
     children: React.ReactNode
 }
 
-const Layout = (props: LayoutProps) => (
+const Layout: React.FC<LayoutProps> = (props) => (
     <Box
         css={{
             maxW: "100%"

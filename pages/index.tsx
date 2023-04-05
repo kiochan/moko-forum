@@ -1,39 +1,29 @@
+import { useEffect, useState } from "react";
 import Layout from "../components/view/Layout";
 import TopicCard from "../components/widget/TopicCard";
-
-
-const topics = [
-    {
-        author: 'Moko',
-        id: '1',
-        title: '锄大地',
-        lastReply: {
-            author: '尕牙',
-            content: '富矿不是锄完了吗？'
-        }
-    },
-    {
-        author: '小香肠',
-        id: '0',
-        title: '吃货委员会',
-        lastReply: {
-            author: '糯米',
-            content: '[图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片][图片]'
-        }
-    },
-    {
-        author: '小吉祥伞王',
-        id: '2',
-        title: '苦力协会',
-        lastReply: {
-            author: 'Moko',
-            content: '不会还有人没下班吧？'
-        }
-    },
-]
+import { TopicCard as TopicCardType } from "../types/TopicCard";
+import { Topic } from "../types/Topic";
+import axios from 'axios'
 
 export default function App() {
-    return <Layout>
+    const [topics, setTopics] = useState<TopicCardType[]>([])
+
+    useEffect(() => {
+        axios.get('/api/topic').then((res) => {
+            const data = res.data as Topic[]
+            const mapedTopic = data.map(topic => {
+                return {
+                    author: topic.author,
+                    id: topic.id,
+                    title: topic.title,
+                    lastReply: topic.replys[topic.replys.length - 1],
+                } as TopicCardType
+            })
+            setTopics(mapedTopic)
+        })
+    }, [])
+
+    return <Layout title="Chat">
         {topics.map((topic) => (<TopicCard key={topic.id} {...topic} />))}
-    </Layout >
+    </Layout>
 }
