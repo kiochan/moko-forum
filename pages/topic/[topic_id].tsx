@@ -1,33 +1,40 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../../components/view/Layout";
 import ReplyCard from "../../components/widget/ReplyCard";
 import { Reply } from "../../types/Reply";
 import { Topic } from "../../types/Topic";
-import { TopicCard as TopicCardType } from "../../types/TopicCard";
 import axios from "axios";
 import { useRouter } from 'next/router'
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import ReplyInput from "../../components/widget/ReplyInput";
+import { styled } from "@nextui-org/react";
 
-export default function App() {
+const ScrollDiv = styled("div", {
+    overflowY: 'scroll',
+});
+
+export default function TopicPage() {
     const [replys, setReplys] = useState<Reply[]>([])
     const [title, setTitle] = useState<string>('')
+    const [lastReplyTime, setLastReplyTime] = useState<number>(0)
     const router = useRouter()
-    const authorInput = useRef<HTMLInputElement>(null)
-    const contentInput = useRef<HTMLInputElement>(null)
+    const scrollRef = useRef<HTMLDivElement>(null)
 
     const id = router.query.topic_id
 
-    function uploadReply() {
-        if (authorInput.current && contentInput.current) {
-            const author = authorInput.current.value
-            const content = contentInput.current.value
-            console.log({ author, content, id })
-            axios.post('/api/topic', { author, content, id }).then((res) => {
-                location.reload();
-            })
+    const uploadReply = useCallback((author: string, content: string) => {
+        axios.post('/api/topic', { author, content, id }).then((res) => {
+            setLastReplyTime(Date.now())
+        })
+    }, [id])
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setLastReplyTime(Date.now())
+        }, 1000)
+        return () => {
+            clearInterval(timer)
         }
-    }
+    }, [])
 
     useEffect(() => {
         axios.get('/api/topic').then((res) => {
@@ -35,22 +42,20 @@ export default function App() {
             const crtTopic = topics.find(topic => {
                 return topic.id === id
             })
-            console.log(topics)
             if (crtTopic) {
                 setTitle(crtTopic.title)
                 setReplys(crtTopic.replys)
+                scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight
             }
         })
-    }, [id])
+    }, [id, lastReplyTime])
 
     return <Layout title={title}>
-        {replys.map((reply, index) => {
-            return <ReplyCard key={index} {...reply} />
-        })}
-        <div>
-            <Input placeholder="名字" ref={authorInput} />
-            <Input placeholder="内容" ref={contentInput} />
-            <Button onClick={uploadReply}>回复</Button>
-        </div>
+        <ScrollDiv ref={scrollRef}>
+            {replys.map((reply, index) => {
+                return <ReplyCard key={index} {...reply} />
+            })}
+        </ScrollDiv>
+        <ReplyInput onSubmit={uploadReply}></ReplyInput>
     </Layout >
 }

@@ -1,5 +1,5 @@
 import { Text, Spacer } from "@nextui-org/react"
-import Box from "./Box"
+import Box from "./Container"
 
 const Content = () => (
     <Box css={{ px: "$12", mt: "$8", "@xsMax": { px: "$10" } }}>

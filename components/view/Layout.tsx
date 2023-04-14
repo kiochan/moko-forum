@@ -1,4 +1,4 @@
-import Box from "./Box";
+import Container from "./Container";
 import Navbar from "../widget/Navbar"
 
 interface LayoutProps {
@@ -7,11 +7,10 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = (props) => (
-    <Box
-    >
+    <Container>
         <Navbar title={props.title} />
         {props.children}
-    </Box>
+    </Container>
 );
 
 export default Layout
