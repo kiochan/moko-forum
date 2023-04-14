@@ -6,7 +6,10 @@ import { Topic } from "../../types/Topic";
 const dataFilename = "data.json";
 const dataPath = path.resolve(process.cwd(), "data", dataFilename);
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Topic[]>
+) {
   if (req.method === "GET") {
     fs.readFile(dataPath, "utf8", (err, data) => {
       if (err) {
@@ -22,18 +25,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const content = req.body.content;
     const id = req.body.id;
 
-    if (author === undefined || content === undefined || id === undefined) {
-      res.status(200).json({
-        error: "Missing parameters",
-      });
+    if ([author, content, id].every((v) => v === undefined)) {
+      console.error(new TypeError("Missing parameters"));
+      res.status(200).json([]);
       return;
     }
 
     fs.readFile(dataPath, "utf8", (err, data) => {
       if (err) {
-        res.status(200).json({
-          error: String(err),
-        });
+        console.error(err);
+        res.status(200).json([]);
         return;
       }
       const topics: Topic[] = JSON.parse(data);
@@ -44,14 +45,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
       fs.writeFile(dataPath, JSON.stringify(topics), (err) => {
         if (err) {
-          res.status(200).json({
-            error: String(err),
-          });
+          console.error(err);
+          res.status(200).json([]);
           return;
         }
       });
 
-      res.status(200).json({});
+      res.status(200).json([]);
     });
   }
 }
