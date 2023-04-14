@@ -2,6 +2,7 @@ module.exports = {
   apps: [
     {
       name: "moko-forum",
+      cwd: ".",
       script: "npm",
       args: "deploy",
       watch: true,
