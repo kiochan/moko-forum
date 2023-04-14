@@ -5,7 +5,8 @@
   "scripts": {
     "next": "next dev",
     "start": "next dev",
-    "_test": "这个start是自定义的，_test是备注"
+    "_test": "这个start是自定义的，_test是备注",
+    "deploy": "npm install && next build && next start -p 2333"
   },
   "keywords": [
     "react",
