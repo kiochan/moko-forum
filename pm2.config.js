@@ -8,7 +8,13 @@ module.exports = {
       watch: true,
       // Delay between restart
       watch_delay: 10000,
-      ignore_watch: ["node_modules", ".next", "code_examples", "data"],
+      ignore_watch: [
+        "node_modules",
+        ".next",
+        "code_examples",
+        "data",
+        "package-lock.json",
+      ],
     },
   ],
 };
