@@ -8,9 +8,6 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = (props) => (
     <Box
-        css={{
-            maxW: "100%"
-        }}
     >
         <Navbar title={props.title} />
         {props.children}

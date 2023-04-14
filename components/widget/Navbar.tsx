@@ -7,7 +7,7 @@ export interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
     return (
-        <NextUINavBar isCompact isBordered variant="sticky">
+        <NextUINavBar isCompact isBordered variant="sticky" maxWidth="fluid">
             <NextUINavBar.Brand>
                 <Logo />
                 <Text b color="inherit" hideIn="xs">
