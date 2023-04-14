@@ -4,7 +4,7 @@ module.exports = {
       name: "moko-forum",
       cwd: ".",
       script: "npm",
-      args: "deploy",
+      args: ["run", "deploy"],
       watch: true,
       // Delay between restart
       watch_delay: 10000,
