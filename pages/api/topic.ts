@@ -4,14 +4,18 @@ import * as path from "path";
 import { Topic } from "../../types/Topic";
 
 const dataFilename = "data.json";
-const dataPath = path.resolve(process.cwd(), "data", dataFilename);
+const dataPath = path.resolve(process.cwd(), "data");
+const dataFilePath = path.resolve(dataPath, dataFilename);
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Topic[]>
 ) {
+  fs.existsSync(dataPath) || fs.mkdirSync("data");
+  fs.existsSync(dataFilePath) || fs.writeFileSync(dataFilePath, "[]");
+
   if (req.method === "GET") {
-    fs.readFile(dataPath, "utf8", (err, data) => {
+    fs.readFile(dataFilePath, "utf8", (err, data) => {
       if (err) {
         console.error(err);
         return;
@@ -31,7 +35,7 @@ export default function handler(
       return;
     }
 
-    fs.readFile(dataPath, "utf8", (err, data) => {
+    fs.readFile(dataFilePath, "utf8", (err, data) => {
       if (err) {
         console.error(err);
         res.status(200).json([]);
@@ -43,7 +47,7 @@ export default function handler(
         .find(({ id: _id }) => _id === id)
         ?.replys.push({ author, content });
 
-      fs.writeFile(dataPath, JSON.stringify(topics), (err) => {
+      fs.writeFile(dataFilePath, JSON.stringify(topics), (err) => {
         if (err) {
           console.error(err);
           res.status(200).json([]);
@@ -68,7 +72,7 @@ export default function handler(
     }
 
     //  阅读数据文件
-    fs.readFile(dataPath, "utf8", (err, data) => {
+    fs.readFile(dataFilePath, "utf8", (err, data) => {
       // 文件有问题的时候
       if (err) {
         console.error(err);
@@ -93,7 +97,7 @@ export default function handler(
       });
 
       // 写入数据文件
-      fs.writeFile(dataPath, JSON.stringify(topics), (err) => {
+      fs.writeFile(dataFilePath, JSON.stringify(topics), (err) => {
         if (err) {
           console.error(err);
           res.status(200).json([]);
