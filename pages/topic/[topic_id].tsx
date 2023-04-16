@@ -6,11 +6,8 @@ import { Topic } from "../../types/Topic";
 import axios from "axios";
 import { useRouter } from 'next/router'
 import ReplyInput from "../../components/widget/ReplyInput";
-import { styled } from "@nextui-org/react";
 
-const ScrollDiv = styled("div", {
-    overflowY: 'scroll',
-});
+import ScrollDiv from '../../components/view/ScrollDiv'
 
 export default function TopicPage() {
     const [replys, setReplys] = useState<Reply[]>([])
@@ -22,7 +19,7 @@ export default function TopicPage() {
     const id = router.query.topic_id
 
     const uploadReply = useCallback((author: string, content: string) => {
-        axios.post('/api/topic', { author, content, id }).then((res) => {
+        axios.put('/api/topic', { author, content, id }).then((res) => {
             setLastReplyTime(Date.now())
         })
     }, [id])
@@ -42,7 +39,7 @@ export default function TopicPage() {
             const crtTopic = topics.find(topic => {
                 return topic.id === id
             })
-            if (crtTopic) {
+            if (crtTopic && crtTopic.replys.length !== replys.length) {
                 setTitle(crtTopic.title)
                 setReplys(crtTopic.replys)
                 scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight

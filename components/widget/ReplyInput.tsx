@@ -7,14 +7,21 @@ const SubmitDiv = styled("div", {
 });
 
 export interface ReplyInputProps {
-    onSubmit: (author: string, content: string) => void
+    onSubmit: (author: string, content: string, title?: string) => void
+    showTitle?: boolean
+    buttonName?: string
 }
 
 export default function ReplyInput(props: ReplyInputProps) {
+    const buttonName = props.buttonName ?? '回复'
+    const showTitle = props.showTitle ?? false
+
     const [author, setAuthor] = useState<string>('')
     const [content, setContent] = useState<string>('')
+    const [title, setTitle] = useState<string>('')
     const authorRef = useRef<HTMLInputElement>(null)
     const contentRef = useRef<HTMLTextAreaElement>(null)
+    const titleRef = useRef<HTMLTextAreaElement>(null)
 
     useEffect(() => {
         const author = localStorage.getItem('author')
@@ -33,24 +40,36 @@ export default function ReplyInput(props: ReplyInputProps) {
 
     const setContentInput = useCallback((e: ChangeEvent<FormElement>) => {
         setContent(e.target.value)
-    }, [setAuthor])
+    }, [setContent])
+
+    const setTitleInput = useCallback((e: ChangeEvent<FormElement>) => {
+        setTitle(e.target.value)
+    }, [setTitle])
 
     const onSubmit = useCallback(() => {
         if (author && content) {
-            props.onSubmit(author, content)
+            props.onSubmit(author, content, title)
         }
         setContent('')
         contentRef.current!.value = ''
     }, [author, content, props.onSubmit])
 
-    const inputIsEmpty = !author || !content
+    const inputIsEmpty = !author || !content || (showTitle && !title)
 
     return <div>
         <Spacer y={0.5} />
+        {
+            props.showTitle ?
+                <>
+                    <Input placeholder="主题" aria-label="topic-title" ref={titleRef} onChange={setTitleInput} />
+                    <Spacer y={0.5} />
+                </>
+                : null
+        }
         <Textarea placeholder="内容" aria-label="reply-content" ref={contentRef} onChange={setContentInput} width="100%" minRows={1} />
         <Spacer y={0.5} />
         <SubmitDiv>
-            <Button onClick={onSubmit} aria-label="reply-submit" disabled={inputIsEmpty}>回复</Button>
+            <Button onClick={onSubmit} aria-label="reply-submit" disabled={inputIsEmpty}>{buttonName}</Button>
             <Input placeholder="名字" aria-label="reply-author" ref={authorRef} onChange={setAuthorInput} />
         </SubmitDiv>
         <Spacer y={0.5} />
