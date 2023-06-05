@@ -51,7 +51,9 @@ export default function ReplyInput(props: ReplyInputProps) {
             props.onSubmit(author, content, title)
         }
         setContent('')
+        setTitle('')
         contentRef.current!.value = ''
+        titleRef.current!.value = ''
     }, [author, content, props.onSubmit])
 
     const inputIsEmpty = !author || !content || (showTitle && !title)
