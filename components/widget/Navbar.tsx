@@ -1,6 +1,8 @@
 import { Navbar as NextUINavBar, Button, Link, Text } from "@nextui-org/react";
 import NextLink from 'next/link'
 import Logo from "./Logo";
+import { createContext, useState } from 'react';
+
 
 export interface NavbarProps {
     title?: string
@@ -13,11 +15,16 @@ export default function Navbar(props: NavbarProps) {
         <NextUINavBar isCompact isBordered variant="sticky" maxWidth="fluid">
             <NextLink href='/'>
                 <NextUINavBar.Brand>
-                    <Logo />
+                    {/* <Logo />
                     <Text b color="inherit" hideIn="xs">
-                        forum
-                    </Text>
+                        forom
+                    </Text> */}
+                    
+                    <Button shadow color="primary" href="#">
+                        返回
+                    </Button>
                 </NextUINavBar.Brand>
+                
             </NextLink>
             {
                 props.title ? (
