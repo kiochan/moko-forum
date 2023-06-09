@@ -47,7 +47,7 @@ export default function TopicPage() {
         })
     }, [id, lastReplyTime])
 
-    return <Layout title={title}>
+    return <Layout title={title} returnButtonName={'返回'} returnTo={'/'}>
         <ScrollDiv ref={scrollRef}>
             {replys.map((reply, index) => {
                 return <ReplyCard key={index} {...reply} />

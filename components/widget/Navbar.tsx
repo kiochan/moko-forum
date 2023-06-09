@@ -1,9 +1,13 @@
 import { Navbar as NextUINavBar, Button, Link, Text } from "@nextui-org/react";
 import NextLink from 'next/link'
 import Logo from "./Logo";
+import { createContext, useState } from 'react';
+
 
 export interface NavbarProps {
     title?: string
+    returnButtonName?: string
+    returnTo?: string
 }
 
 export default function Navbar(props: NavbarProps) {
@@ -13,11 +17,20 @@ export default function Navbar(props: NavbarProps) {
         <NextUINavBar isCompact isBordered variant="sticky" maxWidth="fluid">
             <NextLink href='/'>
                 <NextUINavBar.Brand>
-                    <Logo />
-                    <Text b color="inherit" hideIn="xs">
-                        forum
-                    </Text>
+                    {props.returnButtonName ? (
+                        <Button shadow color="primary" href={props.returnTo}>
+                            {props.returnButtonName}
+                        </Button>
+                    ) : (
+                        <>
+                            <Logo />
+                            <Text b color="inherit" hideIn="xs">
+                                forom
+                            </Text>
+                        </>
+                    )}
                 </NextUINavBar.Brand>
+
             </NextLink>
             {
                 props.title ? (
